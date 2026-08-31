@@ -1,4 +1,5 @@
 {
+  "part": "1",
   "name": "ai-se_project_mesh-ai",
   "version": "1.0.0",
   "description": "Backend API for MeshAI",
