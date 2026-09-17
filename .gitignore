@@ -6,6 +6,7 @@ npm-debug.log*
 # Generated files
 node_modules
 dist
+uploads/
 
 # Optional npm cache directory
 .npm

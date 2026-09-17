@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { answerQuery } from '../controllers/query.js';
+import { queryDocuments } from '../controllers/query.js';
 
 const queryRouter = Router();
 
-queryRouter.post('/', answerQuery);
+queryRouter.post('/', queryDocuments);
 
 export { queryRouter };
