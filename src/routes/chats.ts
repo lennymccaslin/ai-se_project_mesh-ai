@@ -4,8 +4,8 @@ import {
   deleteChat,
   getChat,
   getChats,
-  sendMessage,
 } from '../controllers/chats.js';
+import { sendMessage } from '../controllers/messages.js';
 
 const chatsRouter = Router();
 
