@@ -1,6 +1,7 @@
 import type { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import Chat from '../models/chat.js';
+import Message from '../models/message.js';
 
 export const createChat = async (req: Request, res: Response): Promise<void> => {
   const { title } = req.body;
@@ -100,14 +101,60 @@ export const getChat = async (
     return;
   }
 
+  const messages = await Message.find({ chatId }).sort({ createdAt: 1 });
+
   res.status(200).json({
     success: true,
-    data: chat,
+    data: { chat, messages },
     error: null,
   });
 };
 
-export const deleteChat = (req: Request, res: Response): void => {
+export const deleteChat = async (req: Request, res: Response): Promise<void> => {
+  const chatId = req.params.id;
+  const userId = req.user?.userId;
+
+  if (!userId) {
+    res.status(401).json({
+      success: false,
+      data: null,
+      error: { message: 'Authentication required' },
+    });
+    return;
+  }
+
+  if (typeof chatId !== 'string' || !chatId.trim()) {
+    res.status(400).json({
+      success: false,
+      data: null,
+      error: { message: 'Invalid chat id' },
+    });
+    return;
+  }
+
+  if (!mongoose.isValidObjectId(chatId)) {
+    res.status(400).json({
+      success: false,
+      data: null,
+      error: { message: 'Invalid chat id format' },
+    });
+    return;
+  }
+
+  const chat = await Chat.findOneAndDelete({
+    _id: chatId,
+    userId,
+  });
+
+  if (!chat) {
+    res.status(404).json({
+      success: false,
+      data: null,
+      error: { message: 'Chat not found' },
+    });
+    return;
+  }
+
   res.status(204).send();
 };
 

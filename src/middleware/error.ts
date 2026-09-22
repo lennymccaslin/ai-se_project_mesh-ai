@@ -1,11 +1,11 @@
 import type { Request, Response, NextFunction } from 'express';
 
-function errorHandler(
+async function errorHandler(
   err: Error & { statusCode?: number },
   req: Request,
   res: Response,
   next: NextFunction,
-): void {
+): Promise<void> {
   console.error(err);
 
   const statusCode = err.statusCode ?? 500;
@@ -21,7 +21,7 @@ function errorHandler(
   next();
 }
 
-function notFoundHandler(req: Request, res: Response): void {
+async function notFoundHandler(req: Request, res: Response): Promise<void> {
   res.status(404).json({
     success: false,
     data: null,

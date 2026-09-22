@@ -1,12 +1,13 @@
 import type { Request, Response } from 'express';
 import { readFileSync } from 'fs';
+import mongoose from 'mongoose';
 import { PDFParse } from 'pdf-parse';
 import { createEmbedding } from '../utils/embeddings.js';
 import Document from '../models/document.js';
 import Chunk from '../models/chunk.js';
 import { chunkText } from '../utils/chunk.js';
 
-export const uploadDocument = async (req: Request, res: Response) => {
+export const uploadDocument = async (req: Request, res: Response): Promise<void> => {
   if (!req.file) {
     res.status(400).send({
       success: false,
@@ -101,7 +102,7 @@ export const getDocuments = async (
   });
 };
 
-export const getDocumentById = (req: Request, res: Response): void => {
+export const getDocumentById = async (req: Request, res: Response): Promise<void> => {
   res.status(200).json({
     success: true,
     data: {},
@@ -109,6 +110,50 @@ export const getDocumentById = (req: Request, res: Response): void => {
   });
 };
 
-export const deleteDocument = (req: Request, res: Response): void => {
+export const deleteDocument = async (req: Request, res: Response): Promise<void> => {
+  const documentId = req.params.id;
+  const userId = req.user?.userId;
+
+  if (!userId) {
+    res.status(401).json({
+      success: false,
+      data: null,
+      error: { message: 'Authentication required' },
+    });
+    return;
+  }
+
+  if (typeof documentId !== 'string' || !documentId.trim()) {
+    res.status(400).json({
+      success: false,
+      data: null,
+      error: { message: 'Invalid document id' },
+    });
+    return;
+  }
+
+  if (!mongoose.isValidObjectId(documentId)) {
+    res.status(400).json({
+      success: false,
+      data: null,
+      error: { message: 'Invalid document id format' },
+    });
+    return;
+  }
+
+  const document = await Document.findOneAndDelete({
+    _id: documentId,
+    userId,
+  });
+
+  if (!document) {
+    res.status(404).json({
+      success: false,
+      data: null,
+      error: { message: 'Document not found' },
+    });
+    return;
+  }
+
   res.status(204).send();
 };

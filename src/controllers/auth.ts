@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 
 import User from '../models/user.js';
 
-export const registerUser = async (req: Request, res: Response) => {
+export const registerUser = async (req: Request, res: Response): Promise<void> => {
   const { email, password, name } = req.body;
 
   if (!email || !password || !name) {
@@ -47,7 +47,7 @@ export const registerUser = async (req: Request, res: Response) => {
   }
 };
 
-export const loginUser = async (req: Request, res: Response) => {
+export const loginUser = async (req: Request, res: Response): Promise<void> => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -93,7 +93,7 @@ export const loginUser = async (req: Request, res: Response) => {
   });
 };
 
-export const getProfile = async (req: Request, res: Response) => {
+export const getProfile = async (req: Request, res: Response): Promise<void> => {
   const userId = req.user?.userId;
 
   const user = await User.findById(userId).select('-password');
@@ -116,14 +116,26 @@ export const getProfile = async (req: Request, res: Response) => {
   });
 };
 
-export const getCurrentUser = (req: Request, res: Response): void => {
+export const getCurrentUser = async (req: Request, res: Response): Promise<void> => {
+  const userId = req.user?.userId;
+
+  const user = await User.findById(userId).select('-password');
+
+  if (!user) {
+    res.status(404).json({
+      success: false,
+      data: null,
+      error: { message: 'User not found' },
+    });
+    return;
+  }
+
   res.status(200).json({
     success: true,
     data: {
-      userId: 'user_001',
-      email: 'user@example.com',
-      name: 'John Doe',
-      createdAt: '2026-01-01T00:00:00Z',
+      userId: user._id,
+      email: user.email,
+      name: user.name,
     },
     error: null,
   });

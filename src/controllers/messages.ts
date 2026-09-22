@@ -10,7 +10,7 @@ export const sendMessage = async (
 ): Promise<void> => {
   const chatId = String(req.params.id);
   const userId = req.user?.userId;
-  const { content } = req.body;
+  const { question } = req.body;
 
   if (!userId) {
     res.status(401).json({
@@ -30,11 +30,11 @@ export const sendMessage = async (
     return;
   }
 
-  if (typeof content !== 'string' || !content.trim()) {
+  if (typeof question !== 'string' || !question.trim()) {
     res.status(400).json({
       success: false,
       data: null,
-      error: { message: 'content is required' },
+      error: { message: 'The question field is required' },
     });
     return;
   }
@@ -56,7 +56,7 @@ export const sendMessage = async (
   const userMessage = await Message.create({
     chatId,
     role: 'user',
-    content: content.trim(),
+    content: question.trim(),
   });
 
   const completion = await getClient().chat.completions.create({
@@ -64,7 +64,7 @@ export const sendMessage = async (
     messages: [
       {
         role: 'user',
-        content: content.trim(),
+        content: question.trim(),
       },
     ],
   });
