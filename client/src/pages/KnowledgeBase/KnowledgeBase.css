@@ -1,0 +1,75 @@
+.knowledge-base h1 {
+  font-family: "Space Grotesk", sans-serif;
+}
+
+.knowledge-base__btn-save {
+  display: inline-flex;
+  width: 94px;
+  height: 56px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 11px;
+  background-color: #1c1c1c;
+  color: #fff;
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.knowledge-base__documents {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  list-style: none;
+}
+
+.knowledge-base__document {
+  display: flex;
+  min-width: 0;
+  max-width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: #f1f1f1;
+  color: #1c1c1c;
+}
+
+.knowledge-base__document span {
+  overflow-wrap: anywhere;
+}
+
+.knowledge-base__remove {
+  display: inline-flex;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: #1c1c1c;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.knowledge-base__remove:hover {
+  background: #dedede;
+}
+
+.knowledge-base__remove:focus-visible {
+  outline: 2px solid #1685ff;
+  outline-offset: 2px;
+}
+
+.knowledge-base__btn-save:hover {
+  background-color: #303030;
+}
+
+.knowledge-base__btn-save:focus-visible {
+  outline: 2px solid #1685ff;
+  outline-offset: 2px;
+}
