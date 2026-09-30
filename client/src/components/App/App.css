@@ -1,3 +1,20 @@
 .app {
-  font-family: "Work Sans", Arial, Helvetica, sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.intro {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  /* Stretch to fit viewport vertically */
+  flex-grow: 1;
+
+  /* Center vertically */
+  justify-content: center;
+
+  /* Center horizontally */
+  margin: 0 auto;
 }

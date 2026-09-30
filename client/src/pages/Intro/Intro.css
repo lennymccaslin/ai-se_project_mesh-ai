@@ -1,0 +1,161 @@
+.intro {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-content: start;
+  column-gap: 28px;
+  width: min(100%, 1440px);
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 0 9px 24px;
+  color: #1c1c1c;
+}
+
+.intro__header {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 48px;
+  font-size: 61px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.intro__header h1 {
+  margin: 0;
+  font: inherit;
+}
+
+.intro__header img {
+  width: auto;
+  height: 0.75em;
+  object-fit: contain;
+}
+
+.intro__icon-1,
+.intro__icon-2,
+.intro__icon-3 {
+  display: flex;
+  min-width: 0;
+  min-height: 328px;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 24px 18px;
+  border-radius: 24px;
+  background: #f5f2ff;
+}
+
+.intro__icon-1 img,
+.intro__icon-2 img,
+.intro__icon-3 img {
+  width: 152px;
+  height: 152px;
+  margin-bottom: 20px;
+  object-fit: contain;
+  object-position: left center;
+}
+
+.intro__icon-1 p,
+.intro__icon-2 p,
+.intro__icon-3 p {
+  max-width: 250px;
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+.intro__start-message {
+  grid-column: 1 / -1;
+  margin-top: 40px;
+  font-size: 28px;
+  line-height: 1.3;
+}
+
+.intro__start-message p {
+  margin: 0;
+}
+
+.intro__start-btn {
+  display: flex;
+  width: 107px;
+  min-height: 61px;
+  margin-top: 20px;
+  grid-column: 1;
+  align-items: center;
+  justify-content: center;
+  border-radius: 11px;
+  background: #211e23;
+  color: #fff;
+  font-size: 23px;
+  font-weight: 500;
+  transition: background-color 140ms ease;
+}
+
+.intro__start-btn:hover {
+  background: linear-gradient(135deg, #211e23 0%, #4b3d60 100%);
+}
+
+.intro__start-btn:focus-visible {
+  outline: 3px solid #9370d4;
+  outline-offset: 3px;
+}
+
+@media (max-width: 760px) {
+  .intro {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding-top: 16px;
+    column-gap: 16px;
+  }
+
+  .intro__header {
+    margin-bottom: 32px;
+    font-size: 48px;
+  }
+
+  .intro__icon-1,
+  .intro__icon-2,
+  .intro__icon-3 {
+    min-height: 290px;
+    padding: 18px;
+    border-radius: 18px;
+  }
+
+  .intro__icon-1 p,
+  .intro__icon-2 p,
+  .intro__icon-3 p {
+    font-size: 19px;
+  }
+
+  .intro__start-message {
+    margin-top: 32px;
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 520px) {
+  .intro {
+    grid-template-columns: 1fr;
+  }
+
+  .intro__header {
+    gap: 8px;
+    margin-bottom: 28px;
+    font-size: 36px;
+  }
+
+  .intro__icon-1,
+  .intro__icon-2,
+  .intro__icon-3 {
+    min-height: 0;
+  }
+
+  .intro__icon-1 img,
+  .intro__icon-2 img,
+  .intro__icon-3 img {
+    height: 132px;
+    margin-bottom: 14px;
+  }
+
+  .intro__start-message {
+    font-size: 21px;
+  }
+}

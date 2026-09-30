@@ -4,9 +4,10 @@
   justify-content: center;
   align-items: center;
   gap: 10px;
-  height: 145px;
+  width: 100%;
+  height: 138px;
   background: #f6f3ff;
-  border-radius: 16px;
+  border-radius: 14px;
   font-family: "Work Sans", Arial, Helvetica, sans-serif;
   font-weight: 400;
   font-size: 14px;
