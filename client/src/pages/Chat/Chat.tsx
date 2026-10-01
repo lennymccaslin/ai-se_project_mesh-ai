@@ -1,9 +1,15 @@
-import { useEffect, useState } from "react";
-import { createChat, getChats, getChat, type Chat as ChatType, type Message } from "../../utils/api";
+import { useEffect, useState, type KeyboardEvent } from "react";
+import { createChat, getChats, getChat, sendMessage, type Chat as ChatType, type Message } from "../../utils/api";
 import ReactMarkdown from "react-markdown";
 import { Link } from "react-router";
 import errorIcon from "../../assets/errorIcon.png";
 import "./Chat.css";
+import { useOutletContext } from "react-router";
+
+type MobileContext = {
+ isMobileMenuOpen: boolean;
+ setIsMobileMenuOpen: (open: boolean) => void;
+};
 
 export default function Chat() {
 	const [chats, setChats] = useState<ChatType[]>([]);
@@ -15,6 +21,9 @@ export default function Chat() {
 	const [messages, setMessages] = useState<Message[]>([]);
 	const [isLoadingMessages, setIsLoadingMessages] = useState<boolean>(false);
 	const [messagesError, setMessagesError] = useState<string>("");
+	const [input, setInput] = useState<string>("");
+	const [isSending, setIsSending] = useState<boolean>(false);
+	const { isMobileMenuOpen, setIsMobileMenuOpen } = useOutletContext<MobileContext>();
 
 	useEffect(() => {
   const load = async () => {
@@ -62,6 +71,7 @@ export default function Chat() {
   const handleCreateChat = async () => {
 		const title = newChatTitle.trim() || 'New Chat';
 		setIsCreatingChat(false);
+    setIsMobileMenuOpen(false);
 		setNewChatTitle("New Chat");
 try {
  const res = await createChat(title);
@@ -74,9 +84,56 @@ setActiveChatId(res.data._id);
 }	
 	}
 
+  const handleSend = async () => {
+    const text = input.trim();
+    if (!text || !activeChatId || isSending) return;
+
+    const userMessage: Message = {
+      _id: Date.now().toString(),
+      chatId: activeChatId,
+      role: "user",
+      content: text,
+      createdAt: new Date().toISOString(),
+    };
+
+    setMessages((currentMessages) => [...currentMessages, userMessage]);
+    setMessagesError("");
+    setInput("");
+    setIsSending(true);
+
+    try {
+      const res = await sendMessage(activeChatId, text);
+      if (res.data) {
+        setMessages((prev) => [...prev, res.data!]);
+      }
+    } catch {
+      const errorMessage: Message = {
+        _id: Date.now().toString(),
+        chatId: activeChatId,
+        role: "assistant",
+        content: "Something went wrong. Please try again.",
+        createdAt: new Date().toISOString(),
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+    } finally {
+      setIsSending(false);
+    }
+  };
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
+  };
+
 	return (
   <div className="chat">
-    <aside className="chat__sidebar">
+    <aside
+      className={`chat__sidebar${
+        isMobileMenuOpen ? ' chat__sidebar_open' : ''
+      }`}
+    >
       <button 
 	  className="chat__new-btn" 
 	  type="button"
@@ -113,7 +170,10 @@ setActiveChatId(res.data._id);
         ? 'chat__item chat__item_active'
         : 'chat__item'
     }
-    onClick={() => setActiveChatId(c._id)}
+    onClick={() => {
+      setActiveChatId(c._id);
+      setIsMobileMenuOpen(false);
+    }}
   >
     {c.title}
   </li>
@@ -130,7 +190,10 @@ setActiveChatId(res.data._id);
           <button
             className="chat__empty-state-btn"
             type="button"
-            onClick={() => setIsCreatingChat(true)}
+            onClick={() => {
+              setIsCreatingChat(true);
+              setIsMobileMenuOpen(true);
+            }}
           >
             Start New Chat
           </button>
@@ -142,19 +205,6 @@ setActiveChatId(res.data._id);
           Ask a question below
           <span>to start the conversation</span>
         </h2>
-        <div className="chat__composer">
-          <textarea
-            className="chat__composer-input"
-            aria-label="Ask a question"
-            placeholder="Ask any question"
-            rows={3}
-          />
-          <span className="chat__composer-send" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none">
-              <path d="M4 12 20 5l-5 14-3-6-8-1Z" />
-            </svg>
-          </span>
-        </div>
 		</div>
 		)}
 
@@ -176,9 +226,8 @@ setActiveChatId(res.data._id);
       </section>
   )}
 
-    {activeChatId && !isLoadingMessages && !messagesError && (
+    {activeChatId && !isLoadingMessages && !messagesError && messages.length > 0 && (
     <ul className="chat__messages">
-      <li className="chat__messages-title">Chat with loaded messages</li>
       {messages.map((msg) => (
         <li
           key={msg._id}
@@ -197,6 +246,34 @@ setActiveChatId(res.data._id);
       ))}
     </ul>
   )}
+
+    {activeChatId && !messagesError && (
+      <div className="chat__composer">
+        <div className="chat__input-bar">
+          <textarea
+            className="chat__input"
+            aria-label="Ask a question"
+            placeholder="Ask any question"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            rows={1}
+            disabled={isSending}
+          />
+          <button
+            className="chat__send"
+            type="button"
+            aria-label="Send message"
+            onClick={handleSend}
+            disabled={!input.trim() || isSending || isLoadingMessages}
+          >
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M4 12 20 5l-5 14-3-6-8-1Z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    )}
 
   </div>
   </div>

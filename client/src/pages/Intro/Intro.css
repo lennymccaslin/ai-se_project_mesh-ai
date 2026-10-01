@@ -18,10 +18,10 @@
   margin-bottom: 48px;
   font-size: 61px;
   font-weight: 700;
-  line-height: 1;
+  line-height: 1.15;
 }
 
-.intro__header h1 {
+.intro__header-title {
   margin: 0;
   font: inherit;
 }
@@ -99,63 +99,79 @@
   outline-offset: 3px;
 }
 
-@media (max-width: 760px) {
+@media (max-width: 1200px) {
   .intro {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    padding-top: 16px;
-    column-gap: 16px;
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 10px;
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding: 38px 12px 39px;
   }
 
   .intro__header {
-    margin-bottom: 32px;
-    font-size: 48px;
+    justify-content: center;
+    width: 100%;
+    margin: 0 auto 16px;
+    font-size: 32px;
+    line-height: 1.1;
+    text-align: center;
+  }
+
+  .intro__header-title {
+    width: 175px;
+    max-width: 100%;
+    text-align: center;
+  }
+
+  .intro__header img {
+    display: none;
   }
 
   .intro__icon-1,
   .intro__icon-2,
   .intro__icon-3 {
-    min-height: 290px;
-    padding: 18px;
-    border-radius: 18px;
-  }
-
-  .intro__icon-1 p,
-  .intro__icon-2 p,
-  .intro__icon-3 p {
-    font-size: 19px;
-  }
-
-  .intro__start-message {
-    margin-top: 32px;
-    font-size: 24px;
-  }
-}
-
-@media (max-width: 520px) {
-  .intro {
-    grid-template-columns: 1fr;
-  }
-
-  .intro__header {
-    gap: 8px;
-    margin-bottom: 28px;
-    font-size: 36px;
-  }
-
-  .intro__icon-1,
-  .intro__icon-2,
-  .intro__icon-3 {
-    min-height: 0;
+    width: 100%;
+    min-height: 97px;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 13px;
   }
 
   .intro__icon-1 img,
   .intro__icon-2 img,
   .intro__icon-3 img {
-    height: 132px;
-    margin-bottom: 14px;
+    width: 64px;
+    height: 64px;
+    flex: 0 0 64px;
+    margin: 0;
+    object-position: center;
+  }
+
+  .intro__icon-1 p,
+  .intro__icon-2 p,
+  .intro__icon-3 p {
+    min-width: 0;
+    max-width: none;
+    font-size: 13px;
+    line-height: 1.25;
+    overflow-wrap: break-word;
   }
 
   .intro__start-message {
-    font-size: 21px;
+    margin-top: 20px;
+    font-size: 14px;
+    line-height: 1.2;
+    text-align: center;
+  }
+
+  .intro__start-btn {
+    width: 100%;
+    min-height: 36px;
+    margin-top: 0;
+    border-radius: 7px;
+    font-size: 13px;
   }
 }

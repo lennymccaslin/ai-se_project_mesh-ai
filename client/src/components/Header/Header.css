@@ -41,17 +41,54 @@
   background: #eee8f8;
 }
 
-@media (max-width: 480px) {
+.header__menu-btn {
+  display: none;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+  padding: 0;
+  border: 0;
+  background-color: transparent;
+  background-image: url("../../assets/Button.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+@media (max-width: 1200px) {
   .header {
-    padding: 0 12px;
+    justify-content: flex-start;
+    gap: 12px;
+    border-bottom: 1px solid rgb(0 0 0 / 0.1);
+  }
+
+  .header__menu-btn {
+    display: block;
   }
 
   .header__logo {
-    height: 1.75rem;
+    margin-left: 0;
   }
 
-  .nav-link {
-    padding: 0.5rem;
-    font-size: 0.875rem;
+  /* Nav is hidden by default on mobile */
+  .header__nav {
+    position: fixed;
+    top: 47px;
+    bottom: 0;
+    left: 0;
+    width: 64%;
+    max-width: 255px;
+    flex-direction: column;
+    align-items: flex-start;
+    z-index: 101;
+    display: none;
+    border-top: 1px solid rgb(0 0 0 / 0.1);
+    background-color: #fff;
+    justify-content: end;
+    /* Add padding and gap according to Figma */
+  }
+
+  /* Shown when the menu is open */
+  .header__nav_mobile {
+    display: flex;
   }
 }
