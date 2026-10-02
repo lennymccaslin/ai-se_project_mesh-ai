@@ -8,17 +8,17 @@ export const queryDocuments = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
-   const { question } = req.body;
- 
-   if (!question) {
-     res.status(400).json({
-       success: false,
-       data: null,
-       error: { message: 'question is required' },
-     });
-     return;
-   }
- 
+  const { question } = req.body;
+
+  if (!question) {
+    res.status(400).json({
+      success: false,
+      data: null,
+      error: { message: 'question is required' },
+    });
+    return;
+  }
+
   const userId = req.user?.userId;
 
   if (!userId) {

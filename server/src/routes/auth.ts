@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import { auth } from '../middleware/auth.js';
 import {
-	getCurrentUser,
-	loginUser,
-	registerUser,
+  getCurrentUser,
+  loginUser,
+  registerUser,
 } from '../controllers/auth.js';
 
 const authRouter = Router();

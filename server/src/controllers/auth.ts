@@ -5,7 +5,10 @@ import jwt from 'jsonwebtoken';
 
 import User from '../models/user.js';
 
-export const registerUser = async (req: Request, res: Response): Promise<void> => {
+export const registerUser = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   const { email, password, name } = req.body;
 
   if (!email || !password || !name) {
@@ -19,11 +22,11 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
 
   if (password.length < 8) {
     res.status(400).json({
-    success: false,
-    data: null,
-    error: { message: 'Password must be at least 8 characters long' },
-  });
-  return;
+      success: false,
+      data: null,
+      error: { message: 'Password must be at least 8 characters long' },
+    });
+    return;
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -93,7 +96,10 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
   });
 };
 
-export const getProfile = async (req: Request, res: Response): Promise<void> => {
+export const getProfile = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   const userId = req.user?.userId;
 
   const user = await User.findById(userId).select('-password');
@@ -116,7 +122,10 @@ export const getProfile = async (req: Request, res: Response): Promise<void> => 
   });
 };
 
-export const getCurrentUser = async (req: Request, res: Response): Promise<void> => {
+export const getCurrentUser = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   const userId = req.user?.userId;
 
   const user = await User.findById(userId).select('-password');

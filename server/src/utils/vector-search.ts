@@ -32,12 +32,14 @@ const magnitude = (vec: number[]): number => {
 export const rankBySimilarity = (
   queryEmbedding: number[],
   items: ChunkCandidate[],
-  limit = 5
+  limit = 5,
 ): ScoredChunk[] => {
   const queryMagnitude = magnitude(queryEmbedding);
 
   const scored = items.map((item) => {
-    const score = dot(queryEmbedding, item.embedding) / (queryMagnitude * magnitude(item.embedding));
+    const score =
+      dot(queryEmbedding, item.embedding) /
+      (queryMagnitude * magnitude(item.embedding));
     return { id: item.id, documentId: item.documentId, text: item.text, score };
   });
 

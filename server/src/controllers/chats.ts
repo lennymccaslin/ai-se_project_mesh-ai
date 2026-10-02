@@ -3,7 +3,10 @@ import mongoose from 'mongoose';
 import Chat from '../models/chat.js';
 import Message from '../models/message.js';
 
-export const createChat = async (req: Request, res: Response): Promise<void> => {
+export const createChat = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   const { title } = req.body;
   const userId = req.user?.userId;
 
@@ -53,10 +56,7 @@ export const getChats = async (req: Request, res: Response): Promise<void> => {
   res.status(200).json({ success: true, data: chats, error: null });
 };
 
-export const getChat = async (
-  req: Request,
-  res: Response,
-): Promise<void> => {
+export const getChat = async (req: Request, res: Response): Promise<void> => {
   const chatId = req.params.id;
   const userId = req.user?.userId;
 
@@ -110,7 +110,10 @@ export const getChat = async (
   });
 };
 
-export const deleteChat = async (req: Request, res: Response): Promise<void> => {
+export const deleteChat = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   const chatId = req.params.id;
   const userId = req.user?.userId;
 
@@ -157,4 +160,3 @@ export const deleteChat = async (req: Request, res: Response): Promise<void> => 
 
   res.status(204).send();
 };
-

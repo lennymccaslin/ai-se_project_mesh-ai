@@ -7,7 +7,10 @@ import Document from '../models/document.js';
 import Chunk from '../models/chunk.js';
 import { chunkText } from '../utils/chunk.js';
 
-export const uploadDocument = async (req: Request, res: Response): Promise<void> => {
+export const uploadDocument = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   if (!req.file) {
     res.status(400).send({
       success: false,
@@ -73,7 +76,9 @@ export const uploadDocument = async (req: Request, res: Response): Promise<void>
     res.status(400).json({
       success: false,
       data: null,
-      error: { message: 'Uploaded file is not a valid PDF or could not be parsed' },
+      error: {
+        message: 'Uploaded file is not a valid PDF or could not be parsed',
+      },
     });
   }
 };
@@ -102,7 +107,10 @@ export const getDocuments = async (
   });
 };
 
-export const getDocumentById = async (req: Request, res: Response): Promise<void> => {
+export const getDocumentById = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   res.status(200).json({
     success: true,
     data: {},
@@ -110,7 +118,10 @@ export const getDocumentById = async (req: Request, res: Response): Promise<void
   });
 };
 
-export const deleteDocument = async (req: Request, res: Response): Promise<void> => {
+export const deleteDocument = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   const documentId = req.params.id;
   const userId = req.user?.userId;
 

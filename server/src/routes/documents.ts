@@ -8,8 +8,8 @@ import {
 } from '../controllers/documents.js';
 
 const documentsRouter = Router();
- const upload = multer({ dest: 'uploads/' });
- documentsRouter.post('/', upload.single('file'), uploadDocument);
+const upload = multer({ dest: 'uploads/' });
+documentsRouter.post('/', upload.single('file'), uploadDocument);
 
 documentsRouter.post('/', uploadDocument);
 documentsRouter.get('/', getDocuments);
