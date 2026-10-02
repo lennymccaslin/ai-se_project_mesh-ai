@@ -1,15 +1,19 @@
 .knowledge-base {
-  width: 100%;
+  width: min(100%, 680px);
+  margin: 0 auto;
+  padding: 0 20px;
   color: #1c1c1c;
   font-family: "Work Sans", Arial, Helvetica, sans-serif;
 }
 
 .knowledge-base h1 {
   font-family: "Space Grotesk", sans-serif;
-  margin: 20px 0 25px;
+  margin: 40px 0 25px;
   font-size: 28px;
   font-weight: 700;
   line-height: 1.25;
+  transform: scaleX(0.97);
+  transform-origin: left center;
 }
 
 .knowledge-base__content > p:first-child {
@@ -92,7 +96,7 @@
   outline-offset: 2px;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 1200px) {
   .knowledge-base {
     padding: 28px 20px 24px;
   }

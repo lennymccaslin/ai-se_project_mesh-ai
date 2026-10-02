@@ -4,7 +4,6 @@
   justify-content: space-between;
   min-height: 64px;
   padding: 0 22px;
-  border-bottom: 1px solid #e4e4e4;
 }
 
 .header__logo {
@@ -28,17 +27,30 @@
   min-height: 40px;
   padding: 0.5rem 0.75rem;
   border-radius: 4px;
+  background-color: rgb(150 121 217 / 20%);
   color: #333;
   text-decoration: none;
+  transition:
+    background-color 120ms ease,
+    color 120ms ease;
 }
 
-.nav-link:hover,
-.nav-link:focus-visible {
-  background: #f6f3fb;
+.header__nav a.nav-link:hover,
+.header__nav .nav-link:focus-visible {
+  background-color: #f7f5f9 !important;
+}
+
+.header__nav a.nav-link:hover {
+  color: #8c6bc6 !important;
 }
 
 .nav-link--active {
-  background: #eee8f8;
+  background: #eee6f8;
+  color: #333;
+}
+
+.header__nav a.nav-link--active:hover {
+  background-color: #e9def6 !important;
 }
 
 .header__menu-btn {
@@ -54,11 +66,16 @@
   background-size: contain;
 }
 
+.header__menu-btn:hover {
+  background-color: transparent;
+  background-image: url("../../assets/Button.png");
+  filter: brightness(0);
+}
+
 @media (max-width: 1200px) {
   .header {
     justify-content: flex-start;
     gap: 12px;
-    border-bottom: 1px solid rgb(0 0 0 / 0.1);
   }
 
   .header__menu-btn {

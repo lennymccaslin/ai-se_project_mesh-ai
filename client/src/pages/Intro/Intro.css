@@ -24,6 +24,8 @@
 .intro__header-title {
   margin: 0;
   font: inherit;
+  transform: scaleX(0.97);
+  transform-origin: center;
 }
 
 .intro__header img {
@@ -91,7 +93,7 @@
 }
 
 .intro__start-btn:hover {
-  background: linear-gradient(135deg, #211e23 0%, #4b3d60 100%);
+  background: linear-gradient(to bottom, #211e23 0%, #4b3d60 100%);
 }
 
 .intro__start-btn:focus-visible {
@@ -102,7 +104,7 @@
 @media (max-width: 1200px) {
   .intro {
     grid-template-columns: minmax(0, 1fr);
-    row-gap: 10px;
+    row-gap: 7px;
     width: 100%;
     min-height: 100vh;
     min-height: 100dvh;
@@ -161,7 +163,7 @@
   }
 
   .intro__start-message {
-    margin-top: 20px;
+    margin-top: 16px;
     font-size: 14px;
     line-height: 1.2;
     text-align: center;

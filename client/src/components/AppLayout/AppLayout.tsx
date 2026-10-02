@@ -4,7 +4,7 @@ import { Outlet } from "react-router";
 import { useState } from "react";
 
 export default function AppLayout() {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(true)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
  return (
    <div className="app-layout">
      <Header

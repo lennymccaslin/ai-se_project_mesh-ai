@@ -1,0 +1,14 @@
+.app-layout__backdrop {
+  display: none;
+}
+
+@media (max-width: 1200px) {
+  .app-layout__backdrop {
+    position: fixed;
+    z-index: 100;
+    display: block;
+    inset: 64px 0 0;
+    background: rgb(28 28 28 / 0.2);
+    cursor: pointer;
+  }
+}
