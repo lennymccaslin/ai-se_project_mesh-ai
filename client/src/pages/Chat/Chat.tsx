@@ -1,4 +1,4 @@
-import { useEffect, useState, type KeyboardEvent } from "react";
+import { useEffect, useState, type KeyboardEvent, useRef } from "react";
 import {
   createChat,
   getChats,
@@ -19,6 +19,7 @@ type MobileContext = {
 };
 
 export default function Chat() {
+  const messagesEndRef = useRef<HTMLLIElement>(null);
   const [chats, setChats] = useState<ChatType[]>([]);
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
   const [chatsError, setChatsError] = useState<string | null>(null);
@@ -32,6 +33,10 @@ export default function Chat() {
   const [isSending, setIsSending] = useState<boolean>(false);
   const { isMobileMenuOpen, setIsMobileMenuOpen } =
     useOutletContext<MobileContext>();
+
+  useEffect(() => {
+  messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+}, [messages, isSending]);
 
   useEffect(() => {
     const load = async () => {
@@ -110,16 +115,22 @@ export default function Chat() {
     setIsSending(true);
 
     try {
-      const res = await sendMessage(activeChatId, text);
-      if (res.data) {
-        setMessages((prev) => [...prev, res.data!]);
-      }
-    } catch {
+    const res = await sendMessage(activeChatId, text);
+    if (res.data) {
+    setMessages((prev) => [
+        ...prev.filter((m) => m._id !== userMessage._id),
+        ...res.data!,
+    ]);
+    }
+    } catch (error) {
       const errorMessage: Message = {
         _id: Date.now().toString(),
         chatId: activeChatId,
         role: "assistant",
-        content: "Something went wrong. Please try again.",
+        content:
+          error instanceof Error
+            ? error.message
+            : "Something went wrong. Please try again.",
         createdAt: new Date().toISOString(),
       };
       setMessages((prev) => [...prev, errorMessage]);
@@ -265,11 +276,21 @@ export default function Chat() {
                   )}
                 </li>
               ))}
+              {isSending && (
+                <li className="chat__message chat__message_assistant chat__message_thinking">
+                  Thinking…
+                </li>
+              )}
+              <li ref={messagesEndRef} aria-hidden="true" />
             </ul>
           )}
 
         {activeChatId && !messagesError && (
-          <div className="chat__composer">
+          <div
+            className={`chat__composer${
+              messages.length === 0 ? " chat__composer_empty" : ""
+            }`}
+          >
             <div className="chat__input-bar">
               <textarea
                 className="chat__input"

@@ -2,7 +2,7 @@ import type { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import Chat from '../models/chat.js';
 import Message from '../models/message.js';
-import { getClient, LLM_MODEL } from '../utils/openai-client.js';
+import { getClient, LLM_MODEL, stripThinking } from '../utils/openai-client.js';
 
 export const sendMessage = async (
   req: Request,
@@ -59,7 +59,7 @@ export const sendMessage = async (
     content: question.trim(),
   });
 
-  const completion = await getClient().chat.completions.create({
+  const response = await getClient().chat.completions.create({
     model: LLM_MODEL,
     messages: [
       {
@@ -69,14 +69,14 @@ export const sendMessage = async (
     ],
   });
 
-  const assistantContent =
-    completion.choices[0]?.message?.content?.trim() ||
-    'I could not generate a response.';
+  const answer =
+    stripThinking(response.choices[0]!.message.content ?? '') ||
+    'No answer returned.';
 
   const assistantMessage = await Message.create({
     chatId,
     role: 'assistant',
-    content: assistantContent,
+    content: answer,
   });
 
   res.status(201).json({

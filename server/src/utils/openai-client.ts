@@ -1,6 +1,6 @@
 import OpenAI from 'openai';
 
-export const LLM_MODEL = 'Qwen/Qwen3-32B';
+export const LLM_MODEL = 'Qwen/Qwen3-30B-A3B-Instruct-2507';
 
 let client: OpenAI;
 
@@ -18,3 +18,5 @@ export const buildContext = (chunks: { text: string }[]): string => {
   if (chunks.length === 0) return 'No relevant context found.';
   return chunks.map((chunk, i) => `Chunk ${i + 1}: ${chunk.text}`).join('\n\n');
 };
+export const stripThinking = (text: string): string =>
+  text.replace(/<think>[\s\S]*?<\/think>\s*/g, '').trim();

@@ -10,12 +10,14 @@ async function errorHandler(
 
   const statusCode = err.statusCode ?? 500;
   const message =
-    statusCode === 500 ? 'An error has occurred on the server' : err.message;
+    statusCode === 500 && process.env.NODE_ENV === 'production'
+      ? 'An error has occurred on the server'
+      : err.message;
 
   res.status(statusCode).json({
     success: false,
     data: null,
-    error: message,
+    error: { message },
   });
 
   next();

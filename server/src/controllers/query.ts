@@ -3,6 +3,7 @@ import Chunk from '../models/chunk.js';
 import Document from '../models/document.js';
 import { createEmbedding } from '../utils/embeddings.js';
 import { rankBySimilarity } from '../utils/vector-search.js';
+import { stripThinking, LLM_MODEL, getClient, buildContext } from '../utils/openai-client.js';
 
 export const queryDocuments = async (
   req: Request,
@@ -51,6 +52,21 @@ export const queryDocuments = async (
 
   const queryEmbedding = await createEmbedding(question);
   const rankedChunks = rankBySimilarity(queryEmbedding, chunks);
+
+  const response = await getClient().chat.completions.create({
+  model: LLM_MODEL,
+  messages: [
+    {
+      role: "system",
+      content: `Answer using this context:\n\n${buildContext(rankedChunks)}`,
+    },
+    { role: "user", content: question },
+  ],
+});
+
+const answer =
+  stripThinking(response.choices[0]?.message?.content ?? "") ||
+  "No answer returned.";
 
   res.status(200).json({
     success: true,
