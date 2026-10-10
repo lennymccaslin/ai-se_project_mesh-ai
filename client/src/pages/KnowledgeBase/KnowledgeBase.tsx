@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import type { KnowledgeDoc } from "../../utils/api";
 import UploadArea from "../../components/UploadArea/UploadArea";
 import { getDocuments } from "../../utils/api";
-import { uploadDocument } from "../../utils/api";
+import { uploadDocument, deleteDocument } from "../../utils/api";
 
 export default function KnowledgeBase() {
   const [documents, setDocuments] = useState<KnowledgeDoc[]>([]);
@@ -52,10 +52,19 @@ export default function KnowledgeBase() {
     }
 };
 
-  const handleRemoveDocument = (documentId: string) => {
-    setDocuments((currentDocuments) =>
-      currentDocuments.filter((doc) => doc._id !== documentId),
-    );
+  const handleRemoveDocument = async (documentId: string) => {
+    try {
+      await deleteDocument(documentId);
+      setDocuments((currentDocuments) =>
+        currentDocuments.filter((doc) => doc._id !== documentId),
+      );
+    } catch (deleteError) {
+      setError(
+        deleteError instanceof Error
+          ? deleteError.message
+          : "Failed to delete document",
+      );
+    }
   };
 
   return (

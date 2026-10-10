@@ -2,7 +2,11 @@ import type { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import Chat from '../models/chat.js';
 import Message from '../models/message.js';
-import { getClient, LLM_MODEL, stripThinking } from '../utils/openai-client.js';
+import Chunk from '../models/chunk.js';
+import Document from '../models/document.js';
+import { createEmbedding } from '../utils/embeddings.js';
+import { rankBySimilarity } from '../utils/vector-search.js';
+import { buildContext, getClient, LLM_MODEL, stripThinking } from '../utils/openai-client.js';
 
 export const sendMessage = async (
   req: Request,
@@ -59,13 +63,47 @@ export const sendMessage = async (
     content: question.trim(),
   });
 
+  const userDocs = await Document.find({ userId }, '_id');
+  const chunkRecords = await Chunk.find({
+    documentId: { $in: userDocs.map((d) => d._id) },
+  });
+  const chunks = chunkRecords.map((c) => ({
+    id: String(c._id),
+    documentId: String(c.documentId),
+    text: c.text,
+    embedding: c.embedding,
+  }));
+
+  if (chunks.length === 0) {
+    const assistantMessage = await Message.create({
+      chatId,
+      role: 'assistant',
+      content:
+        "I don't have any uploaded documents to answer from. Please add one in the Knowledge Base.",
+    });
+
+    res.status(201).json({
+      success: true,
+      data: { userMessage, assistantMessage },
+      error: null,
+    });
+    return;
+  }
+
+  const queryEmbedding = await createEmbedding(question.trim());
+  const rankedChunks = rankBySimilarity(queryEmbedding, chunks);
+
   const response = await getClient().chat.completions.create({
     model: LLM_MODEL,
     messages: [
       {
-        role: 'user',
-        content: question.trim(),
+        role: 'system',
+        content:
+          `Answer the question using ONLY the context below. ` +
+          `If the answer is not in the context, say I don't know based on the uploaded documents.\n\n` +
+          `Context:\n${buildContext(rankedChunks)}`,
       },
+      { role: 'user', content: question.trim() },
     ],
   });
 

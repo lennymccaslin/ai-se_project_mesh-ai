@@ -5,18 +5,21 @@ type Props = {
   isUploading: boolean;
 };
 
+const isPdf = (file: File) =>
+  file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
+
 export default function UploadArea({ onFileSelect, isUploading }: Props) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (isUploading) return;
     const file = e.target.files?.[0];
-    if (file) onFileSelect(file);
+    if (file && isPdf(file)) onFileSelect(file);
   };
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     if (isUploading) return;
     const file = e.dataTransfer.files?.[0];
-    if (file) onFileSelect(file);
+    if (file && isPdf(file)) onFileSelect(file);
   };
 
   return (

@@ -166,5 +166,7 @@ export const deleteDocument = async (
     return;
   }
 
+  await Chunk.deleteMany({ documentId: document._id });
+
   res.status(204).send();
 };

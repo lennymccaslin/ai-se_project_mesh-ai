@@ -41,6 +41,10 @@ async function request<T>(
     );
     }
 
+    if (res.status === 204) {
+      return { success: true, data: null, error: null };
+    }
+
     return res.json();
 }
 
@@ -119,6 +123,10 @@ export const uploadDocument = async (file: File): Promise<ApiResponse<KnowledgeD
   }
 
   return res.json();
+};
+
+export const deleteDocument = async (id: string): Promise<ApiResponse<null>> => {
+  return request<null>(`${BASE_URL}/documents/${id}`, { method: "DELETE" });
 };
 
 export const getChats = async (): Promise<ApiResponse<Chat[]>> => {

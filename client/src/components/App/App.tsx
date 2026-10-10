@@ -13,11 +13,11 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Intro />} />
+      <Route element={<AppLayout />}>
       <Route element={<PublicRoute />}>
       <Route path="login" element={<Login />} />
       <Route path='/register' element={<Register />} />
       </Route>
-      <Route element={<AppLayout />}>
       <Route element={<ProtectedRoute />}>
         <Route path="/knowledge" element={<KnowledgeBase />} />
         <Route path="/chat" element={<Chat />} />
