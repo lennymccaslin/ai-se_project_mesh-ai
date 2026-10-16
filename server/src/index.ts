@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import express from 'express';
-import { logger } from './middleware/logger.js';
+import { logger as requestLogger } from './middleware/logger.js';
+import { logger } from './utils/logger.js';
 import router from './routes/index.js';
 import { errorHandler, notFoundHandler } from './middleware/error.js';
 import mongoose from 'mongoose';
@@ -8,9 +9,11 @@ import mongoose from 'mongoose';
 dotenv.config();
 const app = express();
 
+app.set('trust proxy', 1);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(logger);
+app.use(requestLogger);
 app.use(router);
 
 app.get('/health', (req, res): void => {
@@ -33,9 +36,11 @@ const port = process.env.PORT || 3000;
 mongoose
   .connect(process.env.MONGO_URI!)
   .then(() => {
-    console.log('MongoDB connected');
-    app.listen(port, () => console.log(`Server running on port ${port}`));
+    logger.info('MongoDB connected');
+    app.listen(port, () => logger.info(`Server running on port ${port}`));
   })
   .catch((err) => {
-    console.error('Connection error', err);
+    logger.error('Connection error', {
+      stack: err instanceof Error ? err.stack ?? String(err) : String(err),
+    });
   });

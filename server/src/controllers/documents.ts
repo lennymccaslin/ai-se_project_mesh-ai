@@ -3,9 +3,11 @@ import { readFileSync } from 'fs';
 import mongoose from 'mongoose';
 import { PDFParse } from 'pdf-parse';
 import { createEmbedding } from '../utils/embeddings.js';
+import { logger } from '../utils/logger.js';
 import Document from '../models/document.js';
 import Chunk from '../models/chunk.js';
 import { chunkText } from '../utils/chunk.js';
+import { getCacheValue, setCacheValue, deleteCacheValue } from '../utils/cache.js';
 
 export const uploadDocument = async (
   req: Request,
@@ -72,7 +74,9 @@ export const uploadDocument = async (
       error: null,
     });
   } catch (error) {
-    console.error('Document upload failed', error);
+    logger.error('Document upload failed', {
+      stack: error instanceof Error ? error.stack : String(error),
+    });
     res.status(400).json({
       success: false,
       data: null,
@@ -88,6 +92,13 @@ export const getDocuments = async (
   res: Response,
 ): Promise<void> => {
   const userId = req.user?.userId;
+  const cacheKey = `documents-list:${req.user!.userId}`;
+  const cached = getCacheValue(cacheKey);
+
+  if (cached) {
+    res.status(200).json(cached);
+    return;
+  }
 
   if (!userId) {
     res.status(401).json({
@@ -98,7 +109,9 @@ export const getDocuments = async (
     return;
   }
 
-  const documents = await Document.find({ userId });
+  const documents = await Document.find({ owner: req.user!.userId });
+  const responseData = { data: documents };
+  setCacheValue(cacheKey, responseData, 30_000);
 
   res.status(200).json({
     success: true,

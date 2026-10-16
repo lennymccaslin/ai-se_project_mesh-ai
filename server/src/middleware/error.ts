@@ -1,4 +1,5 @@
 import type { Request, Response, NextFunction } from 'express';
+import { logger } from '../utils/logger.js';
 
 async function errorHandler(
   err: Error & { statusCode?: number },
@@ -6,7 +7,7 @@ async function errorHandler(
   res: Response,
   next: NextFunction,
 ): Promise<void> {
-  console.error(err);
+  logger.error(err.message, { stack: err.stack ?? String(err) });
 
   const statusCode = err.statusCode ?? 500;
   const message =
