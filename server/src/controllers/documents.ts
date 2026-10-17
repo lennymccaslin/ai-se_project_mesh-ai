@@ -68,6 +68,8 @@ export const uploadDocument = async (
       }),
     );
 
+    deleteCacheValue(`documents-list:${userId}`);
+
     res.status(201).send({
       success: true,
       data: document,
@@ -180,6 +182,7 @@ export const deleteDocument = async (
   }
 
   await Chunk.deleteMany({ documentId: document._id });
+  deleteCacheValue(`documents-list:${userId}`);
 
   res.status(204).send();
 };

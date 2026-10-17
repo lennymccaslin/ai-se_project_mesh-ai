@@ -1,6 +1,5 @@
 import type { Request, Response } from 'express';
 import User from '../models/user.js';
-import { stringify } from 'node:querystring';
 
 export const getCurrentUser = async (
  req: Request,
