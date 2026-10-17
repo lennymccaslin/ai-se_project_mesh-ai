@@ -44,7 +44,7 @@ export const queryDocuments = async (
   if (chunks.length === 0) {
     res.status(200).json({
       success: true,
-      data: [],
+      data: { answer: null, sources: [] },
       error: null,
     });
     return;
@@ -70,7 +70,7 @@ const answer =
 
   res.status(200).json({
     success: true,
-    data: rankedChunks,
+    data: { answer, sources: rankedChunks },
     error: null,
   });
 };
