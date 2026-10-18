@@ -1,6 +1,6 @@
 type CacheEntry = {
   value: unknown;
-  createdAt: number;
+  expiresAt: number;
 };
 
 const cache = new Map<string, CacheEntry>();
@@ -11,7 +11,7 @@ export const getCacheValue = (key: string): unknown => {
 
   if (!entry) return null;
 
-  if (Date.now() - entry.createdAt > TTL_MS) {
+  if (Date.now() > entry.expiresAt) {
     cache.delete(key);
     return null;
   }
@@ -19,8 +19,12 @@ export const getCacheValue = (key: string): unknown => {
   return entry.value;
 };
 
-export const setCacheValue = (key: string, value: unknown, ttlMs: number = TTL_MS,): void => {
-  cache.set(key, { value, createdAt: Date.now() + ttlMs });
+export const setCacheValue = (
+  key: string,
+  value: unknown,
+  ttlMs: number = TTL_MS,
+): void => {
+  cache.set(key, { value, expiresAt: Date.now() + ttlMs });
 };
 
 export const deleteCacheValue = (key: string): void => {
