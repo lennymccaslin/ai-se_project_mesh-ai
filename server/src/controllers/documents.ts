@@ -57,6 +57,8 @@ export const uploadDocument = async (
       userId,
     });
 
+    deleteCacheValue(`documents-list:${userId}`);
+
     await Promise.all(
       chunks.map(async (chunkTextValue) => {
         const embedding = await createEmbedding(chunkTextValue);
@@ -67,8 +69,6 @@ export const uploadDocument = async (
         });
       }),
     );
-
-    deleteCacheValue(`documents-list:${userId}`);
 
     res.status(201).send({
       success: true,
@@ -94,13 +94,6 @@ export const getDocuments = async (
   res: Response,
 ): Promise<void> => {
   const userId = req.user?.userId;
-  const cacheKey = `documents-list:${req.user!.userId}`;
-  const cached = getCacheValue(cacheKey);
-
-  if (cached) {
-    res.status(200).json(cached);
-    return;
-  }
 
   if (!userId) {
     res.status(401).json({
@@ -111,15 +104,19 @@ export const getDocuments = async (
     return;
   }
 
-  const documents = await Document.find({ owner: req.user!.userId });
-  const responseData = { data: documents };
+  const cacheKey = `documents-list:${userId}`;
+  const cached = getCacheValue(cacheKey);
+
+  if (cached) {
+    res.status(200).json(cached);
+    return;
+  }
+
+  const documents = await Document.find({ userId });
+  const responseData = { success: true, data: documents, error: null };
   setCacheValue(cacheKey, responseData, 30_000);
 
-  res.status(200).json({
-    success: true,
-    data: documents,
-    error: null,
-  });
+  res.status(200).json(responseData);
 };
 
 export const getDocumentById = async (
