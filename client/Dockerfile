@@ -9,5 +9,6 @@ COPY index.html vite.config.ts tsconfig*.json ./
 RUN npm run build
 
 FROM caddy:2-alpine AS frontend
+COPY Caddyfile /etc/caddy/Caddyfile
 COPY --from=meshai-frontend /app/dist /usr/share/caddy
 EXPOSE 80
