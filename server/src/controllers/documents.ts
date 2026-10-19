@@ -1,7 +1,6 @@
 import type { Request, Response } from 'express';
 import { readFileSync } from 'fs';
 import mongoose from 'mongoose';
-import { PDFParse } from 'pdf-parse';
 import { createEmbedding } from '../utils/embeddings.js';
 import { logger } from '../utils/logger.js';
 import Document from '../models/document.js';
@@ -35,6 +34,8 @@ export const uploadDocument = async (
 
   try {
     const buffer = readFileSync(req.file.path);
+    // Loaded lazily: its native canvas dependency crashes on CPUs without AVX
+    const { PDFParse } = await import('pdf-parse');
     const parser = new PDFParse({ data: buffer });
     const parsed = await parser.getText();
     const text = parsed.text?.trim();
